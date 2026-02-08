@@ -1,0 +1,15 @@
+groups:
+- name: sample_app_slos
+  rules:
+
+  - record: sample_app:request_rate
+    expr: rate(sample_app_requests_total[1m])
+
+  - record: sample_app:latency_p95
+    expr: histogram_quantile(
+      0.95,
+      rate(sample_app_request_latency_seconds_bucket[5m])
+    )
+
+  - record: sample_app:availability
+    expr: avg_over_time(up{job="sample_app"}[5m])

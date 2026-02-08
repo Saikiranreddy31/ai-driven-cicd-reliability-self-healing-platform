@@ -1,0 +1,10 @@
+global:
+  resolve_timeout: 1m
+
+route:
+  receiver: "log-alerts"
+
+receivers:
+- name: "log-alerts"
+  webhook_configs:
+  - url: "http://localhost:5001/alerts"

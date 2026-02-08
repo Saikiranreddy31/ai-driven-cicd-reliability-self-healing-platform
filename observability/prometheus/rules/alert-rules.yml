@@ -1,0 +1,30 @@
+groups:
+- name: sample_app_alerts
+  rules:
+
+  - alert: SampleAppDown
+    expr: up{job="sample_app"} == 0
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: "Sample App is DOWN"
+      description: "No metrics received from sample_app"
+
+  - alert: HighLatency
+    expr: sample_app:latency_p95 > 0.5
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High latency detected"
+      description: "P95 latency > 500ms"
+
+  - alert: ErrorBudgetBurningFast
+    expr: rate(sample_app_requests_total[1m]) > 5
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Error budget burning fast"
+      description: "Too many requests failing"
