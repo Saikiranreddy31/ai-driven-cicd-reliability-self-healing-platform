@@ -1,0 +1,23 @@
+global:
+  resolve_timeout: 1m
+
+route:
+  receiver: "log-alerts"
+  routes:
+    - matchers:
+        - severity="critical"
+      receiver: "self-healer"
+
+receivers:
+  - name: "log-alerts"
+    webhook_configs:
+      - url: "http://localhost:5001/alerts"
+
+  - name: "self-healer"
+    webhook_configs:
+      - url: "http://self_healer:9000/alert"
+
+receivers:
+- name: "log-alerts"
+  webhook_configs:
+  - url: "http://self_healer:9000/alerts"
