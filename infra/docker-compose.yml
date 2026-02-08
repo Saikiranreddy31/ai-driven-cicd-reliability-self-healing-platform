@@ -43,6 +43,18 @@ services:
       - ../observability/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
     networks:
       - monitoring
+      
+  self_healer:
+    build:
+      context: ../self_healer
+    container_name: self_healer
+    ports:
+      - "9000:9000"
+    depends_on:
+      - alertmanager
+    networks:
+      - monitoring
+
 
 networks:
   monitoring:
