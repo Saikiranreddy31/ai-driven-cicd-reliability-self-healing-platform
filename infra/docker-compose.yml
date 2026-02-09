@@ -43,18 +43,19 @@ services:
       - ../observability/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
     networks:
       - monitoring
-      
+
   self_healer:
     build:
-      context: ../self_healer
+      context: ../services/self_healer
+      dockerfile: Dockerfile
+    image: infra-self_healer
     container_name: self_healer
     ports:
       - "9000:9000"
-    depends_on:
-      - alertmanager
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     networks:
       - monitoring
-
 
 networks:
   monitoring:
