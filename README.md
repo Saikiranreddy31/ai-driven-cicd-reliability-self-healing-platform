@@ -1,70 +1,136 @@
-# ai-driven-cicd-reliability-self-healing-platform
-An AI-driven CI/CD reliability engineering platform that detects pipeline and infrastructure failures, analyzes root causes, and performs automated self-healing actions with observability and rollback support.
+🚀 AI-Driven CI/CD Reliability & Self-Healing Platform
 
-This project is a hands-on SRE / DevOps system built to simulate real-world reliability problems and show how modern teams observe, alert, and respond to failures.
+An AI-powered CI/CD reliability engineering platform that detects application and infrastructure failures, analyzes root causes using AI, and performs automated self-healing actions with observability, gated deployments, and rollback support.
 
-Instead of a toy app, this setup behaves like a real production service: it exposes metrics, fails in controlled ways, triggers alerts, and visualizes everything through dashboards. The next step is to make it self-healing.
+This project simulates real-world production reliability systems, not a toy demo.
+Failures are intentionally injected, observed via metrics, alerted through SLOs, analyzed by AI, and automatically remediated.
 
-🎯 What I’m Building (and Why)
+🎯 Why This Project Exists
 
-The goal of this project is to understand and demonstrate how reliability is handled in real systems, not just how apps are deployed.
+Modern DevOps is no longer about just deploying code.
+It’s about keeping systems reliable under failure.
+
+This project demonstrates:
+
+Observability-first system design
+
+SLO-driven alerting
+
+CI-gated Continuous Deployment
+
+Automated rollback on failure
+
+Alert-driven self-healing
+
+AI-assisted incident analysis & remediation decisions
 
 
-This project focuses on:
+Complete System Design
 
-Building a production-like microservice
+                         ┌───────────────────────────┐
+                         │       GitHub Actions      │
+                         │  CI + Gated CD Pipelines  │
+                         └─────────────┬─────────────┘
+                                       │
+                                       ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                        Production Platform                         │
+│                                                                  │
+│  ┌──────────────┐     /metrics     ┌──────────────┐             │
+│  │  Sample App  │ ───────────────▶ │  Prometheus  │             │
+│  │  (FastAPI)   │                  │  (Metrics)   │             │
+│  │              │                  └──────┬───────┘             │
+│  │  Failure     │                         │                     │
+│  │  Injection   │                         ▼                     │
+│  │  (latency,   │                  ┌──────────────┐             │
+│  │  crash, 500) │                  │   Grafana    │             │
+│  └──────┬───────┘                  │ Dashboards   │             │
+│         │                            └──────────────┘             │
+│         │                                                         │
+│         │ SLO breach                                              │
+│         ▼                                                         │
+│  ┌──────────────┐     Webhook     ┌──────────────────────────┐   │
+│  │ Alertmanager │ ──────────────▶ │      Self-Healer         │   │
+│  │              │                 │  (FastAPI Service)       │   │
+│  └──────────────┘                 │                          │   │
+│                                   │  ┌────────────────────┐  │   │
+│                                   │  │ AI Analyzer        │  │   │
+│                                   │  │ (OpenAI API)       │  │   │
+│                                   │  └─────────┬──────────┘  │   │
+│                                   │            │             │   │
+│                                   │   Decision │             │   │
+│                                   │  (restart / no-op)       │   │
+│                                   │            ▼             │   │
+│                                   │  ┌────────────────────┐  │   │
+│                                   │  │ Healing Engine     │  │   │
+│                                   │  │ (Docker SDK)       │  │   │
+│                                   │  └─────────┬──────────┘  │   │
+│                                   │            │             │   │
+│                                   └────────────┼─────────────┘   │
+│                                                │                 │
+│                                        Container Restart          │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
 
-Adding metrics from day one
 
-Monitoring the service using Prometheus
 
-Visualizing system health in Grafana
+🔁 How AI Changes the System
+❌ Traditional Alerting
 
-Defining SLOs and error budgets
+Alert fires
 
-Triggering alerts when things go wrong
+Static rule → restart container
 
-(Next) Automatically fixing issues using self-healing automation
+No context, no reasoning
 
-🧱 High-Level Architecture
-┌────────────┐
-│ Sample App │  (FastAPI + Failure Injection)
-└─────┬──────┘
-      │ /metrics
-┌─────▼────────┐
-│ Prometheus   │  (Metrics scraping & recording rules)
-└─────┬────────┘
-      │
-┌─────▼────────┐
-│ Grafana      │  (Dashboards & visualization)
-└─────┬────────┘
-      │
-┌─────▼────────┐
-│ Alertmanager │  (SLO-based alerts)
-└──────────────┘
+✅ AI-Assisted Reliability (This Project)
+
+Alert fires due to SLO breach
+
+Alert payload sent to Self-Healer
+
+AI analyzes:
+
+Incident type
+
+Probable root cause
+
+Severity
+
+Recommended action
+
+Healing engine acts only if AI approves
+
+Prevents unnecessary restarts
+
+Creates explainable remediation
+
+This mirrors modern SRE decision-making, not blind automation.
+
 
 📦 Tech Stack
 
-Python (FastAPI) – service implementation
+Python (FastAPI) – sample app & self-healer
 
-Prometheus – metrics collection & rules
+Prometheus – metrics & recording rules
 
-Grafana – dashboards and visualization
+Grafana – dashboards
 
 Alertmanager – alert routing
 
-Docker & Docker Compose – containerization
+Docker & Docker Compose – orchestration
 
-Failure Injection (Chaos) – controlled outages
+GitHub Actions – CI & CD pipelines
 
-GitHub Actions (Phase 4) – CI/CD & automation
+OpenAI API – AI-based incident analysis
+
 
 🚀 Phase-Wise Implementation
 ✅ Phase 1 — Sample Service & Failure Injection
 
-What I built:
+Built:
 
-A FastAPI service with:
+FastAPI service with:
 
 /ping
 
@@ -72,109 +138,117 @@ A FastAPI service with:
 
 /metrics
 
-Built-in failure modes:
+Failure modes (via FAIL_MODE):
 
-latency (slow responses)
+latency
 
-crash (process exits)
+crash
 
-error (500 errors)
+error
 
-memory (simulated memory leak)
+memory
 
-Failures are controlled using an environment variable: FAIL_MODE
-
-Why this matters:
-
-Real reliability work starts by expecting failures, not avoiding them.
+Why:
+Reliability engineering starts by expecting failure.
 
 ✅ Phase 2 — Dockerization
 
-What I did:
-
 Dockerized the application
 
-Standardized runtime using Uvicorn
+Standardized runtime with Uvicorn
 
-Verified the app runs the same locally and inside Docker
+Ensured parity between local & container execution
 
-Outcome:
-
-The service is now portable, reproducible, and production-ready.
-
-✅ Phase 3 — Observability & Reliability Engineering
-🔹 Phase 3.1 — Metrics Instrumentation
-
-Added custom Prometheus metrics:
+✅ Phase 3 — Observability & SLOs
+Metrics
 
 Request count
 
-Request latency (histograms)
+Latency histograms
 
-🔹 Phase 3.2 — Prometheus Setup
-
-Configured Prometheus scraping
+Prometheus
 
 Docker-based service discovery
 
-Verified targets and metrics ingestion
+Recording rules
 
-🔹 Phase 3.3 — Grafana Dashboards
+Grafana
 
-Created and provisioned dashboards for:
+RPS dashboards
 
-Request rate (RPS)
+P95 latency
 
-Latency (P95)
+Availability
 
-Service availability
+Alerting
 
-🔹 Phase 3.4 — SLOs & Alerting
+SLO-based alerts
 
-Defined recording rules:
-
-sample_app:request_rate
-
-sample_app:latency_p95
-
-sample_app:availability
-
-Configured Alertmanager
-
-Alerts fire automatically when SLOs are breached
-
-Verified end-to-end:
-
-Prometheus shows alert states
-
-Grafana reflects real-time spikes
-
-Alertmanager receives and manages alerts
+Alertmanager routing
 
 🧪 Failure Testing
-
-Run the service with failures enabled:
-
-docker run -e FAIL_MODE=latency -p 8000:8000 failing-service
+docker run -e FAIL_MODE=crash -p 8000:8000 infra-sample_app
 
 
-or:
+Observed:
 
-docker run -e FAIL_MODE=crash -p 8000:8000 failing-service
+🚨 Alert fired
 
+📉 Grafana spike
 
-What you’ll see:
+📨 Alertmanager received alert
 
-🚨 Alerts firing in Prometheus
+✅ Phase 4 — Continuous Integration (CI)
 
-📉 Latency spikes in Grafana
+GitHub Actions CI
 
-📊 Dashboards updating in real time
+Validates every commit
 
-🏁 Current Status
+Prevents broken merges
 
-✔ Phase 1 — Completed
+✅ Phase 5 — Automated Self-Healing
 
-✔ Phase 2 — Completed
+Self-Healer service listens to alerts
 
-✔ Phase 3 — Completed
+Uses Docker SDK to restart containers
+
+Fully automated recovery
+
+♻️ Restarted container: sample_app
+
+✅ Phase 6 — AI-Assisted Incident Analysis
+
+Integrated OpenAI API
+
+AI returns:
+
+Root cause
+
+Severity
+
+Recommended action
+
+Enum-based healing decisions
+
+Result:
+Smart, explainable remediation.
+
+✅ Phase 7 — Gated CD, Health Checks & Rollback
+
+CD runs only if CI is green
+
+Docker health checks added
+
+Automatic rollback on failure
+
+This is production-grade CD, not basic deployment.
+
+✅ Phase 8 — Production Readiness & Finalization
+
+End-to-end validation
+
+Crash → alert → AI → heal → recover
+
+Stable release tagged
+
+git tag v1.0-prod
